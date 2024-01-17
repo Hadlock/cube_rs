@@ -134,6 +134,15 @@ fn main() {
             draw_line(&mut buffer, p1, p2, WIDTH);
         }
 
+        // Set one side of the cube to blue
+        for &(i, j) in &edges {
+            if i == 0 && j == 1 {
+                let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
+                let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
+                draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x0000FF);
+            }
+        }
+
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
     }
 }
@@ -185,6 +194,36 @@ fn draw_line(buffer: &mut Vec<u32>, p1: (usize, usize), p2: (usize, usize), widt
     while x != x2 as isize || y != y2 as isize {
         if x >= 0 && x < width as isize && y >= 0 && y < HEIGHT as isize {
             buffer[(y as usize) * width + (x as usize)] = 0xFFFFFF;
+        }
+
+        let e2 = 2 * err;
+        if e2 > -dy {
+            err -= dy;
+            x += sx;
+        }
+        if e2 < dx {
+            err += dx;
+            y += sy;
+        }
+    }
+}
+
+fn draw_line_with_color(buffer: &mut Vec<u32>, p1: (usize, usize), p2: (usize, usize), width: usize, color: u32) {
+    let (x1, y1) = p1;
+    let (x2, y2) = p2;
+
+    let dx = (x2 as isize - x1 as isize).abs();
+    let dy = (y2 as isize - y1 as isize).abs();
+    let sx = if x1 < x2 { 1 } else { -1 };
+    let sy = if y1 < y2 { 1 } else { -1 };
+    let mut err = dx - dy;
+
+    let mut x = x1 as isize;
+    let mut y = y1 as isize;
+
+    while x != x2 as isize || y != y2 as isize {
+        if x >= 0 && x < width as isize && y >= 0 && y < HEIGHT as isize {
+            buffer[(y as usize) * width + (x as usize)] = color;
         }
 
         let e2 = 2 * err;
