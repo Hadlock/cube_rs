@@ -243,6 +243,8 @@ fn main() {
             draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x00FF00); // Set square color to green
         }
 
+        
+
         // Draw the x-axis line (red)
         let p1 = project([-1.0, 0.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
         let p2 = project([1.0, 0.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
