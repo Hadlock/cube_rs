@@ -90,7 +90,7 @@ fn main() {
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
 
         // Rotate the camera
-        angle += 0.01;
+        angle += 0.001;
 
         // Handle camera movement
         if window.is_key_down(Key::Up) {
