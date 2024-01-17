@@ -51,6 +51,10 @@ fn main() {
     // Camera rotation angle
     let mut angle = 0.0;
 
+    // Camera position
+    let mut camera_x = 0.0;
+    let mut camera_y = 0.0;
+
     while window.is_open() && !window.is_key_down(Key::Escape) {
         // Clear the window
         let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
@@ -59,10 +63,24 @@ fn main() {
         // Rotate the camera
         angle += 0.01;
 
+        // Handle camera movement
+        if window.is_key_down(Key::Up) {
+            camera_y += 0.1;
+        }
+        if window.is_key_down(Key::Down) {
+            camera_y -= 0.1;
+        }
+        if window.is_key_down(Key::Left) {
+            camera_x -= 0.1;
+        }
+        if window.is_key_down(Key::Right) {
+            camera_x += 0.1;
+        }
+
         // Project and draw the cube edges
         for &(i, j) in &edges {
-            let p1 = project(vertices[i], angle);
-            let p2 = project(vertices[j], angle);
+            let p1 = project(vertices[i], angle, camera_x, camera_y);
+            let p2 = project(vertices[j], angle, camera_x, camera_y);
             draw_line(&mut buffer, p1, p2, WIDTH);
         }
 
@@ -72,7 +90,7 @@ fn main() {
 }
 
 // Project a 3D point onto a 2D plane
-fn project(point: [f32; 3], angle: f32) -> (usize, usize) {
+fn project(point: [f32; 3], angle: f32, camera_x: f32, camera_y: f32) -> (usize, usize) {
     let x = point[0];
     let y = point[1];
     let z = point[2];
@@ -81,11 +99,11 @@ fn project(point: [f32; 3], angle: f32) -> (usize, usize) {
     let cos_a = angle.cos();
 
     let x2 = x * cos_a - z * sin_a;
-    let y2 = y;
+    let y2 = y + camera_y;
     let z2 = x * sin_a + z * cos_a;
 
     let scale = 2.0 / (z2 + 3.0);
-    let x3 = x2 * scale;
+    let x3 = x2 * scale + camera_x;
     let y3 = y2 * scale;
 
     let screen_x = (WIDTH as f32 / 2.0 + x3 * WIDTH as f32 / 4.0) as usize;
