@@ -193,10 +193,47 @@ fn main() {
         }
 
         // Project and draw the cube edges
+        fn is_front_edge(i: usize, j: usize) -> bool {
+            // Define the indices of the front edges
+            let front_edges = vec![
+                (0, 1), (1, 2), (2, 3), (3, 0), // Front face
+                //(4, 5), (5, 6), (6, 7), (7, 4), // Back face
+                //(0, 4), (1, 5), (2, 6), (3, 7), // Connecting edges
+            ];
+
+            // Check if the given indices represent a front edge
+            front_edges.contains(&(i, j)) || front_edges.contains(&(j, i))
+        }
+        fn is_rear_edge(i: usize, j: usize) -> bool {
+            // Define the indices of the rear edges
+            let rear_edges = vec![
+                (4, 5), (5, 6), (6, 7), (7, 4), // Rear face
+                //(0, 1), (1, 2), (2, 3), (3, 0), // Front face
+                //(0, 4), (1, 5), (2, 6), (3, 7), // Connecting edges
+            ];
+
+            // Check if the given indices represent a rear edge
+            rear_edges.contains(&(i, j)) || rear_edges.contains(&(j, i))
+        }
+        fn is_bottom_edge(i: usize, j: usize) -> bool {
+            // Define the indices of the bottom edges
+            let bottom_edges = vec![
+                (4, 5), (5, 6), (6, 7), (7, 4), // Bottom face
+                //(0, 4), (1, 5), (2, 6), (3, 7), // Connecting edges
+            ];
+
+            // Check if the given indices represent a bottom edge
+            bottom_edges.contains(&(i, j)) || bottom_edges.contains(&(j, i))
+        }
+
         for &(i, j) in &edges {
             let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
             let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
-            draw_line(&mut buffer, p1, p2, WIDTH);
+            if is_front_edge(i, j) {
+                draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x0000FF); // Set front cube edges to blue
+            } else {
+                draw_line(&mut buffer, p1, p2, WIDTH);
+            }
         }
 
         // Project and draw the square edges
