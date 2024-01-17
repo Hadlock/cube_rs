@@ -151,6 +151,26 @@ fn main() {
                 vertices[i] = rotated_vertices[i];
             }
         }
+        if window.is_key_down(Key::I) {
+            // Rotate cube around the center of its x-axis
+            let center_x = (vertices[0][0] + vertices[6][0]) / 2.0;
+            let center_y = (vertices[0][1] + vertices[6][1]) / 2.0;
+            let center_z = (vertices[0][2] + vertices[6][2]) / 2.0;
+            let rotated_vertices = rotate_around_x(vertices, center_x, center_y, center_z, 0.01);
+            for i in 0..vertices.len() {
+                vertices[i] = rotated_vertices[i];
+            }
+        }
+        if window.is_key_down(Key::K) {
+            // Rotate cube around the center of its x-axis
+            let center_x = (vertices[0][0] + vertices[6][0]) / 2.0;
+            let center_y = (vertices[0][1] + vertices[6][1]) / 2.0;
+            let center_z = (vertices[0][2] + vertices[6][2]) / 2.0;
+            let rotated_vertices = rotate_around_x(vertices, center_x, center_y, center_z, -0.01);
+            for i in 0..vertices.len() {
+                vertices[i] = rotated_vertices[i];
+            }
+        }
 
         // Project and draw the cube edges
         for &(i, j) in &edges {
@@ -289,6 +309,24 @@ fn rotate_around_z(vertices: [[f32; 3]; 8], center_x: f32, center_y: f32, center
         rotated_vertices[i][0] = x * cos_a - y * sin_a + center_x;
         rotated_vertices[i][1] = x * sin_a + y * cos_a + center_y;
         rotated_vertices[i][2] = z + center_z;
+    }
+
+    rotated_vertices
+}
+
+fn rotate_around_x(vertices: [[f32; 3]; 8], center_x: f32, center_y: f32, center_z: f32, angle: f32) -> [[f32; 3]; 8] {
+    let sin_a = angle.sin();
+    let cos_a = angle.cos();
+
+    let mut rotated_vertices = [[0.0; 3]; 8];
+    for i in 0..vertices.len() {
+        let x = vertices[i][0] - center_x;
+        let y = vertices[i][1] - center_y;
+        let z = vertices[i][2] - center_z;
+
+        rotated_vertices[i][0] = x + center_x;
+        rotated_vertices[i][1] = y * cos_a - z * sin_a + center_y;
+        rotated_vertices[i][2] = y * sin_a + z * cos_a + center_z;
     }
 
     rotated_vertices
