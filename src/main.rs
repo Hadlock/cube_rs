@@ -146,14 +146,20 @@ fn main() {
             draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x00FF00); // Set square color to green
         }
 
-        // Set one side of the cube to blue
-        for &(i, j) in &edges {
-            if i == 0 && j == 1 {
-                let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
-                let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z);
-                draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x0000FF);
-            }
-        }
+        // Draw the x-axis line (red)
+        let p1 = project([-1.0, 0.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        let p2 = project([1.0, 0.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0xFF0000);
+
+        // Draw the y-axis line (dark green)
+        let p1 = project([0.0, -1.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        let p2 = project([0.0, 1.0, 0.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x006400);
+
+        // Draw the z-axis line (cyan blue)
+        let p1 = project([0.0, 0.0, -1.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        let p2 = project([0.0, 0.0, 1.0], angle, camera_x, camera_y, 0.0, 0.0, 0.0);
+        draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x00FFFF);
 
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
     }
