@@ -1,0 +1,8 @@
+draw a 3d wireframe cube with six vertexes and six equal sides. use only 2d primitives like lines. the lines should be 1 pixel wide and not anti-aliased. the lines should be white with a blue background. rotate the camera slowly around the wireframe cube.
+
+draw a 3d wireframe cube that is slowly spinning on its x and y axis using minifb. only use primitives like lines. the lines should be 1 pixel wide. do not use anti-aliasing. white lines on a blue background.
+
+using minifb draw a 3d wireframe cube made from pimitive white lines as seen from a viewport or camera. the background should be blue. rotate the camera slowly around the centerpoint of the cube, 45 degrees above the cube. the lines should be 1 pixel wide. do not use anti-aliasing. 
+
+
+using minifb draw a 3d wireframe cube made from pimitive white lines as seen from a viewport or camera. the background should be blue. rotate the camera slowly around the centerpoint of the cube, 45 degrees above the cube. the lines should be 1 pixel wide. do not use anti-aliasing. 
