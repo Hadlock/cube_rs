@@ -79,6 +79,9 @@ fn main() {
     // Cube tilt
     let mut cube_tilt = 0.0;
 
+    // Cube roll
+    let mut cube_roll = 0.0;
+
     let frame_duration = Duration::from_secs_f64(1.0 / FRAME_RATE as f64);
     let mut last_frame_time = Instant::now();
 
@@ -93,7 +96,7 @@ fn main() {
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
 
         // Rotate the camera
-        angle += 0.001;
+        //angle += 0.001;
 
         // Handle camera movement
         if window.is_key_down(Key::Up) {
@@ -131,25 +134,33 @@ fn main() {
             cube_tilt -= 0.3;
         }
 
+        // Handle cube roll
+        if window.is_key_down(Key::J) {
+            cube_roll -= 0.3;
+        }
+        if window.is_key_down(Key::L) {
+            cube_roll += 0.3;
+        }
+
         // Project and draw the cube edges
         for &(i, j) in &edges {
-            let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt);
-            let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt);
+            let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt, cube_roll);
+            let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt, cube_roll);
             draw_line(&mut buffer, p1, p2, WIDTH);
         }
 
         // Project and draw the square edges
         for &(i, j) in &square_edges {
-            let p1 = project(square_vertices[i], angle, camera_x, camera_y, 0.0, 0.0, -3.0, 0.0);
-            let p2 = project(square_vertices[j], angle, camera_x, camera_y, 0.0, 0.0, -3.0, 0.0);
+            let p1 = project(square_vertices[i], angle, camera_x, camera_y, 0.0, 0.0, -3.0, 0.0, 0.0);
+            let p2 = project(square_vertices[j], angle, camera_x, camera_y, 0.0, 0.0, -3.0, 0.0, 0.0);
             draw_line(&mut buffer, p1, p2, WIDTH);
         }
 
         // Set one side of the cube to blue
         for &(i, j) in &edges {
             if i == 0 && j == 1 {
-                let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt);
-                let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt);
+                let p1 = project(vertices[i], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt, cube_roll);
+                let p2 = project(vertices[j], angle, camera_x, camera_y, cube_x, cube_y, cube_z, cube_tilt, cube_roll);
                 draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x0000FF);
             }
         }
@@ -168,6 +179,7 @@ fn project(
     cube_y: f32,
     cube_z: f32,
     cube_tilt: f32,
+    cube_roll: f32,
 ) -> (usize, usize) {
     let x = point[0] + cube_x;
     let y = point[1] + cube_y;
@@ -180,12 +192,25 @@ fn project(
     let y2 = y + camera_y;
     let z2 = x * sin_a + z * cos_a;
 
-    let scale = 2.0 / (z2 + 3.0);
-    let x3 = x2 * scale + camera_x;
-    let y3 = y2 * scale;
+    let sin_t = cube_tilt.sin();
+    let cos_t = cube_tilt.cos();
 
-    let screen_x = (WIDTH as f32 / 2.0 + x3 * WIDTH as f32 / 4.0) as usize;
-    let screen_y = (HEIGHT as f32 / 2.0 - y3 * HEIGHT as f32 / 4.0 + cube_tilt * HEIGHT as f32 / 4.0) as usize;
+    let x3 = x2 * cos_t - y2 * sin_t;
+    let y3 = x2 * sin_t + y2 * cos_t;
+
+    let sin_r = cube_roll.sin();
+    let cos_r = cube_roll.cos();
+
+    let x4 = x3 * cos_r - z2 * sin_r;
+    let y4 = y3;
+    let z4 = x3 * sin_r + z2 * cos_r;
+
+    let scale = 2.0 / (z4 + 3.0);
+    let x5 = x4 * scale + camera_x;
+    let y5 = y4 * scale;
+
+    let screen_x = (WIDTH as f32 / 2.0 + x5 * WIDTH as f32 / 4.0) as usize;
+    let screen_y = (HEIGHT as f32 / 2.0 - y5 * HEIGHT as f32 / 4.0) as usize;
 
     (screen_x, screen_y)
 }
