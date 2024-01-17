@@ -131,7 +131,7 @@ fn main() {
         for &(i, j) in &square_edges {
             let p1 = project(square_vertices[i], angle, camera_x, camera_y, 0.0, 0.0, -3.0);
             let p2 = project(square_vertices[j], angle, camera_x, camera_y, 0.0, 0.0, -3.0);
-            draw_line(&mut buffer, p1, p2, WIDTH);
+            draw_line_with_color(&mut buffer, p1, p2, WIDTH, 0x00FF00); // Set square color to green
         }
 
         // Set one side of the cube to blue
