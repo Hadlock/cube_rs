@@ -125,6 +125,12 @@ fn main() {
         if window.is_key_down(Key::D) {
             cube_x += 0.1;
         }
+        if window.is_key_down(Key::Q) {
+            cube_y -= 0.1; // Move cube down
+        }
+        if window.is_key_down(Key::E) {
+            cube_y += 0.1; // Move cube up
+        }
 
         // Project and draw the cube edges
         for &(i, j) in &edges {
