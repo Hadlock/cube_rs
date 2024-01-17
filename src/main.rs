@@ -70,7 +70,7 @@ fn main() {
     ];
 
     // Camera rotation angle
-    let mut angle = 0.0;
+    let mut angle = 180.0;
 
     // Camera position
     let mut camera_x = 0.0;
@@ -90,7 +90,7 @@ fn main() {
         window.update_with_buffer(&buffer, WIDTH, HEIGHT).unwrap();
 
         // Rotate the camera
-        angle += 0.001;
+        //angle += 0.001;
 
         // Handle camera movement
         if window.is_key_down(Key::Up) {
@@ -104,6 +104,12 @@ fn main() {
         }
         if window.is_key_down(Key::Right) {
             camera_x += 0.1;
+        }
+        if window.is_key_down(Key::Comma) {
+            angle -= 0.01; // Turn camera left
+        }
+        if window.is_key_down(Key::Period) {
+            angle += 0.01; // Turn camera right
         }
 
         // Handle cube movement
