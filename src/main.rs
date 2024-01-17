@@ -2,7 +2,7 @@ use minifb::{Key, Window, WindowOptions};
 use std::time::{Duration, Instant};
 const WIDTH: usize = 800;
 const HEIGHT: usize = 600;
-const FRAME_RATE: u64 = 120;
+const FRAME_RATE: u64 = 240;
 
 fn main() {
     // Create a window with blue background
